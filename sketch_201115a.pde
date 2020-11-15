@@ -28,7 +28,15 @@ void draw()
 	for (int i = 0; i < fft.specSize(); i += 5)
 	{
 		float x = map(i,0,fft.specSize(),0,width);
-    float y = map(fft.getBand(i),0, 5.0, height, 0);
+    float y = 0;
+    if (i < 100) {
+      y = map(fft.getBand(i),0, 5.0, height, 0);
+    } else {
+      y = map(fft.getBand(i) * i,0, fftSize, height, 0);
+    }
+    if (y < 0) {
+      y = 0;
+    }
 		fill(182, 100, 80, 30);
     stroke(182, 100, 80, 40);
     rect(x,y,15, height);
