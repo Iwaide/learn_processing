@@ -5,9 +5,11 @@ AudioPlayer player;
 FFT fft;
 int fftSize;
 PImage img;
+boolean playing = true;
 
 void setup()
 {
+  smooth();
   size(960, 540, P2D);
 	colorMode(HSB,360,100,100,100);
 	minim = new Minim(this);
@@ -22,14 +24,15 @@ void setup()
 
 void draw()
 {
-  background(255);
-  image(img, 0, 0, width, height);
+  if (playing) {
+    image(img, 0, 0, width, height);
+  }
 	fft.forward(player.mix);
-	for (int i = 0; i < fft.specSize(); i += 5)
+	for (int i = 0; i < fft.specSize() - 20; i++)
 	{
 		float x = map(i,0,fft.specSize(),0,width);
     float y = 0;
-    if (i < 100) {
+    if (i < 100 || i >= fft.specSize() - 20) {
       y = map(fft.getBand(i),0, 5.0, height, 0);
     } else {
       y = map(fft.getBand(i) * i,0, fftSize, height, 0);
@@ -37,8 +40,19 @@ void draw()
     if (y < 0) {
       y = 0;
     }
-		fill(182, 100, 80, 30);
-    stroke(182, 100, 80, 40);
-    rect(x,y,15, height);
+		fill(0,0, 20, 30);
+    stroke(0,0, 20, 40);
+    rect(x,y, 1, height);
 	}
+}
+
+
+void mousePressed() {
+  if (playing) {
+    player.pause();
+    playing = false;
+  } else {
+    player.play();
+    playing = true;
+  }
 }
