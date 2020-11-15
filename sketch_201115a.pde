@@ -1,26 +1,30 @@
 import ddf.minim.*;
+import ddf.minim.signals.*;
 
 Minim minim;
-AudioSample kick;
-AudioSample snare;
+AudioOutput out;
+SineWave sine;
 
 void setup() {
   minim = new Minim(this);
-  kick = minim.loadSample("kick.wav", 2048);
-  snare = minim.loadSample("snare.wav", 2048);
+  out = minim.getLineOut(Minim.STEREO);
+  sine = new SineWave(440, 0.5, out.sampleRate());
+  sine.portamento(200);
+  out.addSignal(sine);
 }
 
 void draw() {
 }
 
-void keyPressed() {
-  if (key == 'k') kick.trigger();
-  if (key == 's') snare.trigger();
+void mouseMoved() {
+  float freq = map(mouseY, 0, height, 1500, 60);
+  sine.setFreq(freq);
+  float pan = map(mouseX, 0, width, -1, 1);
+  sine.setPan(pan);
 }
 
 void stop() {
-  kick.close();
-  snare.close();
+  out.close();
   minim.stop();
 
   super.stop();
