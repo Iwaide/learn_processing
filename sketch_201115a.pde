@@ -28,11 +28,12 @@ void draw()
     image(img, 0, 0, width, height);
   }
 	fft.forward(player.mix);
-	for (int i = 0; i < fft.specSize() - 20; i++)
+  float specSize = fft.specSize()- 40;
+	for (int i = 0; i < specSize; i++)
 	{
-		float x = map(i,0,fft.specSize(),0,width);
+		float x = map(i,0,specSize,0,width);
     float y = 0;
-    if (i < 100 || i >= fft.specSize() - 20) {
+    if (i < 100) {
       y = map(fft.getBand(i),0, 5.0, height, 0);
     } else {
       y = map(fft.getBand(i) * i,0, fftSize, height, 0);
@@ -42,7 +43,7 @@ void draw()
     }
 		fill(0,0, 20, 30);
     stroke(0,0, 20, 40);
-    rect(x,y, 1, height);
+    rect(x,y, 0, height);
 	}
 }
 
